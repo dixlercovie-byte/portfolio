@@ -172,6 +172,65 @@
     background: rgba(0, 0, 0, 0.85);
     border-color: var(--accent-2);
   }
+  .pause-btn {
+    position: absolute;
+    top: 6px;
+    right: 78px;
+    z-index: 2;
+    background: rgba(0, 0, 0, 0.6);
+    color: #fff;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 4px 9px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    line-height: 1;
+  }
+  .pause-btn:hover {
+    background: rgba(0, 0, 0, 0.85);
+    border-color: var(--accent-2);
+  }
+  .exit-btn {
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    z-index: 2;
+    background: rgba(0, 0, 0, 0.6);
+    color: #fff;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 4px 9px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    line-height: 1;
+  }
+  .exit-btn:hover {
+    background: rgba(200, 40, 40, 0.85);
+    border-color: #e64c4c;
+  }
+  .pause-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: rgba(0, 0, 0, 0.72);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+  .pause-overlay-text {
+    color: #fff;
+    text-align: center;
+    font-size: 1rem;
+    font-weight: 700;
+  }
+  .pause-overlay-text span {
+    display: block;
+    font-size: 0.7rem;
+    font-weight: 400;
+    color: #ccc;
+    margin-top: 4px;
+  }
   .thumb-wrap:fullscreen {
     background: #000;
     display: flex;
@@ -716,42 +775,92 @@ It took you 3 guesses.</div>
       window.addEventListener("resize", resizeCanvas);
     }
 
+    function addPauseButton(wrap, game) {
+      const btn = document.createElement("button");
+      btn.className = "pause-btn";
+      btn.type = "button";
+      btn.title = "Pause";
+      btn.textContent = "⏸";
+      wrap.appendChild(btn);
+
+      const overlay = document.createElement("div");
+      overlay.className = "pause-overlay";
+      overlay.style.display = "none";
+      overlay.innerHTML = '<div class="pause-overlay-text">⏸ Paused<span>Click to resume</span></div>';
+      wrap.appendChild(overlay);
+
+      let paused = false;
+      function setPaused(p) {
+        paused = p;
+        overlay.style.display = p ? "flex" : "none";
+        btn.textContent = p ? "▶" : "⏸";
+        btn.title = p ? "Resume" : "Pause";
+        if (p && game.pause) game.pause();
+        if (!p && game.resume) game.resume();
+      }
+      btn.addEventListener("click", function () {
+        setPaused(!paused);
+      });
+      overlay.addEventListener("click", function () {
+        setPaused(false);
+      });
+    }
+
+    function addExitButton(wrap, originalHTML, launch) {
+      const btn = document.createElement("button");
+      btn.className = "exit-btn";
+      btn.type = "button";
+      btn.title = "Exit";
+      btn.textContent = "✕";
+      wrap.appendChild(btn);
+      btn.addEventListener("click", function () {
+        if (wrap._currentGame && wrap._currentGame.stop) wrap._currentGame.stop();
+        wrap._currentGame = null;
+        wrap.innerHTML = originalHTML;
+        wrap.querySelector(".play-btn").addEventListener("click", launch);
+      });
+    }
+
     function wireCanvasGame(playBtnId, wrapId, hintText, startFn) {
-      document.getElementById(playBtnId).addEventListener("click", function () {
-        const wrap = document.getElementById(wrapId);
+      const wrap = document.getElementById(wrapId);
+      const originalHTML = wrap.innerHTML;
+
+      function launch() {
         wrap.innerHTML =
           '<canvas class="game-canvas" id="' + wrapId + '-canvas"></canvas>' +
           '<div class="game-hint">' + hintText + "</div>";
         const canvas = document.getElementById(wrapId + "-canvas");
-        startFn(canvas);
+        const game = startFn(canvas);
+        wrap._currentGame = game;
         addMuteButton(wrap);
         addFullscreenButton(wrap);
-      });
+        addPauseButton(wrap, game);
+        addExitButton(wrap, originalHTML, launch);
+      }
+
+      document.getElementById(playBtnId).addEventListener("click", launch);
     }
 
-    document.getElementById("guess-play-btn").addEventListener("click", function () {
-      const wrap = document.getElementById("guess-thumb-wrap");
-      wrap.innerHTML = '<div class="guess-wrap" id="guess-wrap"></div>';
-      startGuessGame(document.getElementById("guess-wrap"));
-      addMuteButton(wrap);
-      addFullscreenButton(wrap);
-    });
+    function wireDomGame(playBtnId, wrapId, containerHTML, containerId, startFn) {
+      const wrap = document.getElementById(wrapId);
+      const originalHTML = wrap.innerHTML;
 
-    document.getElementById("wordle-play-btn").addEventListener("click", function () {
-      const wrap = document.getElementById("wordle-thumb-wrap");
-      wrap.innerHTML = '<div id="wordle-container"></div>';
-      startWordleGame(document.getElementById("wordle-container"));
-      addMuteButton(wrap);
-      addFullscreenButton(wrap);
-    });
+      function launch() {
+        wrap.innerHTML = containerHTML;
+        const game = startFn(document.getElementById(containerId));
+        wrap._currentGame = game;
+        addMuteButton(wrap);
+        addFullscreenButton(wrap);
+        addPauseButton(wrap, game);
+        addExitButton(wrap, originalHTML, launch);
+      }
 
-    document.getElementById("g2048-play-btn").addEventListener("click", function () {
-      const wrap = document.getElementById("g2048-thumb-wrap");
-      wrap.innerHTML = '<div id="g2048-container"></div>';
-      start2048Game(document.getElementById("g2048-container"));
-      addMuteButton(wrap);
-      addFullscreenButton(wrap);
-    });
+      document.getElementById(playBtnId).addEventListener("click", launch);
+    }
+
+    wireDomGame("guess-play-btn", "guess-thumb-wrap", '<div class="guess-wrap" id="guess-wrap"></div>', "guess-wrap", startGuessGame);
+    wireDomGame("wordle-play-btn", "wordle-thumb-wrap", '<div id="wordle-container"></div>', "wordle-container", startWordleGame);
+    wireDomGame("g2048-play-btn", "g2048-thumb-wrap", '<div id="g2048-container"></div>', "g2048-container", start2048Game);
 
     wireCanvasGame(
       "pacman-play-btn", "pacman-thumb-wrap",

@@ -102,6 +102,7 @@
     let results = [];
     let state = "PLAYING";
     let keyStatus = {};
+    let paused = false;
     let wins = parseInt(localStorage.getItem("portfolio_wordle_wins") || "0", 10);
 
     container.innerHTML =
@@ -186,6 +187,7 @@
     }
 
     function handleKey(key) {
+      if (paused) return;
       if (state !== "PLAYING") return;
       if (key === "ENTER") {
         submitGuess();
@@ -253,6 +255,7 @@
 
     function onKeyDown(e) {
       if (document.activeElement !== wrap) return;
+      if (paused) return;
       if (state !== "PLAYING") {
         if (e.key === "Enter") reset();
         return;
@@ -278,6 +281,8 @@
 
     return {
       stop: () => window.removeEventListener("keydown", onKeyDown),
+      pause: () => { paused = true; },
+      resume: () => { paused = false; },
       getSecret: () => secret,
       _handleKey: handleKey,
       _reset: reset,

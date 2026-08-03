@@ -4,6 +4,8 @@
   function startGuessGame(container) {
     let secret = Math.floor(Math.random() * 100) + 1;
     let attempts = 0;
+    let paused = false;
+    let gameWon = false;
 
     container.innerHTML =
       '<div class="guess-log" id="guess-log">Welcome to Guess the Number!\n' +
@@ -26,6 +28,7 @@
     function playAgain() {
       secret = Math.floor(Math.random() * 100) + 1;
       attempts = 0;
+      gameWon = false;
       input.disabled = false;
       input.value = "";
       btn.textContent = "Guess";
@@ -38,6 +41,7 @@
 
     form.addEventListener("submit", function (e) {
       e.preventDefault();
+      if (paused) return;
       const val = input.value.trim();
       if (!/^\d+$/.test(val)) {
         appendLine("Please enter a whole number.");
@@ -55,6 +59,7 @@
         appendLine("You got it! The number was " + secret + ".");
         appendLine("It took you " + attempts + " guesses.");
         if (window.SFX) SFX.win();
+        gameWon = true;
         input.disabled = true;
         btn.textContent = "Play Again";
         btn.type = "button";
@@ -70,6 +75,15 @@
     return {
       getSecret: () => secret,
       getAttempts: () => attempts,
+      pause: () => {
+        paused = true;
+        input.disabled = true;
+      },
+      resume: () => {
+        paused = false;
+        if (!gameWon) input.disabled = false;
+      },
+      stop: () => {},
     };
   }
 

@@ -166,7 +166,7 @@
         this.reset();
         return;
       }
-      if (this.state !== "PLAYING") return;
+      if (this.state !== "PLAYING" || this.paused) return;
 
       if (e.repeat) return;
       if (e.key === "ArrowLeft") {
@@ -361,11 +361,23 @@
 
     loop(now) {
       if (this.stopped) return;
-      const dt = Math.min(0.05, (now - this.lastTime) / 1000);
-      this.lastTime = now;
-      this.update(dt);
-      this.draw();
+      if (!this.paused) {
+        const dt = Math.min(0.05, (now - this.lastTime) / 1000);
+        this.lastTime = now;
+        this.update(dt);
+        this.draw();
+      }
       requestAnimationFrame(this.loop);
+    }
+
+    pause() {
+      this.paused = true;
+      this.keysDown = {};
+    }
+
+    resume() {
+      this.paused = false;
+      this.lastTime = performance.now();
     }
 
     stop() {

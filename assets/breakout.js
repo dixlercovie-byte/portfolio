@@ -112,6 +112,7 @@
       if (["ArrowLeft", "ArrowRight", "a", "A", "d", "D", " "].includes(e.key)) {
         e.preventDefault();
       }
+      if (this.paused) return;
       this.keysDown[e.key] = true;
       if (e.key === " " && this.state === "READY") {
         this.state = "PLAYING";
@@ -259,11 +260,23 @@
 
     loop(now) {
       if (this.stopped) return;
-      const dt = Math.min(0.05, (now - this.lastTime) / 1000);
-      this.lastTime = now;
-      this.update(dt);
-      this.draw();
+      if (!this.paused) {
+        const dt = Math.min(0.05, (now - this.lastTime) / 1000);
+        this.lastTime = now;
+        this.update(dt);
+        this.draw();
+      }
       requestAnimationFrame(this.loop);
+    }
+
+    pause() {
+      this.paused = true;
+      this.keysDown = {};
+    }
+
+    resume() {
+      this.paused = false;
+      this.lastTime = performance.now();
     }
 
     stop() {

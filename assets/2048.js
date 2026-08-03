@@ -132,6 +132,7 @@
     let best = parseInt(localStorage.getItem("portfolio_2048_best") || "0", 10);
     let state = "PLAYING";
     let hasWon = false;
+    let paused = false;
 
     container.innerHTML =
       '<div class="g2048-wrap" tabindex="0">' +
@@ -232,6 +233,7 @@
 
     function onKeyDown(e) {
       if (document.activeElement !== wrap) return;
+      if (paused) return;
       const map = {
         ArrowLeft: "left", a: "left", A: "left",
         ArrowRight: "right", d: "right", D: "right",
@@ -262,6 +264,8 @@
 
     return {
       stop: () => window.removeEventListener("keydown", onKeyDown),
+      pause: () => { paused = true; },
+      resume: () => { paused = false; },
       getGrid: () => cloneGrid(grid),
       getScore: () => score,
       _move: doMove,

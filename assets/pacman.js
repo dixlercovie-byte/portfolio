@@ -304,6 +304,7 @@
         ArrowDown: [0, 1], s: [0, 1], S: [0, 1],
       };
       if (moveKeys[e.key]) e.preventDefault();
+      if (this.paused) return;
       if ((e.key === "r" || e.key === "R") && this.state !== "PLAYING") {
         this.resetGame();
         return;
@@ -453,11 +454,22 @@
 
     loop(now) {
       if (this.stopped) return;
-      const dt = Math.min(0.05, (now - this.lastTime) / 1000);
-      this.lastTime = now;
-      this.update(dt);
-      this.draw();
+      if (!this.paused) {
+        const dt = Math.min(0.05, (now - this.lastTime) / 1000);
+        this.lastTime = now;
+        this.update(dt);
+        this.draw();
+      }
       requestAnimationFrame(this.loop);
+    }
+
+    pause() {
+      this.paused = true;
+    }
+
+    resume() {
+      this.paused = false;
+      this.lastTime = performance.now();
     }
 
     stop() {

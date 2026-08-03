@@ -80,6 +80,7 @@
 
     onKeyDown(e) {
       if (document.activeElement !== this.canvas) return;
+      if (this.paused) return;
 
       if (e.key === "r" || e.key === "R") {
         if (this.state === "GAMEOVER") this.reset();
@@ -288,11 +289,22 @@
 
     loop(now) {
       if (this.stopped) return;
-      const dt = Math.min(0.05, (now - this.lastTime) / 1000);
-      this.lastTime = now;
-      this.update(dt);
-      this.draw();
+      if (!this.paused) {
+        const dt = Math.min(0.05, (now - this.lastTime) / 1000);
+        this.lastTime = now;
+        this.update(dt);
+        this.draw();
+      }
       requestAnimationFrame(this.loop);
+    }
+
+    pause() {
+      this.paused = true;
+    }
+
+    resume() {
+      this.paused = false;
+      this.lastTime = performance.now();
     }
 
     stop() {
