@@ -7,14 +7,15 @@
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>%F0%9F%8E%AE</text></svg>">
 <style>
   :root {
-    --bg: #0f1117;
-    --bg-alt: #171a23;
-    --card: #1c202b;
-    --text: #eef0f4;
-    --text-dim: #9aa1b2;
+    --bg: #ffffff;
+    --bg-alt: #f1f3f6;
+    --card: #ffffff;
+    --text: #1a1d24;
+    --text-dim: #5b6472;
     --accent: #ffd447;
     --accent-2: #6fb7ff;
-    --border: #2a2f3d;
+    --accent-2-dark: #1d6fd6;
+    --border: #dfe3e9;
   }
   * { box-sizing: border-box; }
   body {
@@ -35,7 +36,7 @@
     margin: 0 0 10px;
     letter-spacing: -0.02em;
   }
-  .hero h1 span { color: var(--accent-2); }
+  .hero h1 span { color: var(--accent-2-dark); }
   .hero p.tagline {
     color: var(--text-dim);
     font-size: 1.2rem;
@@ -73,7 +74,8 @@
   }
   .card:hover {
     transform: translateY(-4px);
-    border-color: var(--accent-2);
+    border-color: var(--accent-2-dark);
+    box-shadow: 0 8px 20px rgba(20, 30, 50, 0.08);
   }
   .card .thumb {
     aspect-ratio: 4 / 3;
@@ -264,7 +266,7 @@
   .tag {
     font-size: 0.72rem;
     background: var(--bg-alt);
-    color: var(--accent-2);
+    color: var(--accent-2-dark);
     border: 1px solid var(--border);
     padding: 3px 9px;
     border-radius: 999px;
@@ -295,11 +297,15 @@
   <div class="wrap">
 
     <section class="about">
-      <h2>About</h2>
+      <h2>Professional Summary</h2>
       <p>
-        I'm new to programming and building things as I go — starting with small
-        Python scripts and working up to full games with graphics, physics, and
-        game logic. Every project on this page was built using AI
+        Self-taught software developer with hands-on experience building complete,
+        interactive applications in Python and JavaScript. Independently designed
+        and implemented five fully playable games featuring AI-driven behavior,
+        physics simulation, and procedural generation, then ported them to the
+        browser and deployed them as a live, publicly accessible website. Comfortable
+        working across the full development lifecycle — from design and debugging
+        to testing, deployment, and iteration.
       </p>
     </section>
 
