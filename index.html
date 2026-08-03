@@ -330,6 +330,81 @@
     align-items: center;
     justify-content: center;
   }
+  .g2048-wrap {
+    background: #121212;
+    padding: 14px 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    outline: none;
+  }
+  .g2048-hud {
+    display: flex;
+    justify-content: space-between;
+    width: 206px;
+    color: #eee4da;
+    font-size: 0.75rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .g2048-board {
+    display: grid;
+    grid-template-columns: repeat(4, 44px);
+    grid-template-rows: repeat(4, 44px);
+    gap: 6px;
+    background: #2a2d33;
+    padding: 6px;
+    border-radius: 6px;
+  }
+  .g2048-cell {
+    width: 44px;
+    height: 44px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    transition: background 0.1s ease;
+  }
+  .g2048-cell.pop {
+    animation: g2048-pop 0.15s ease;
+  }
+  @keyframes g2048-pop {
+    0% { transform: scale(0.5); }
+    100% { transform: scale(1); }
+  }
+  .g2048-message {
+    min-height: 16px;
+    font-size: 0.7rem;
+    text-align: center;
+    margin-top: 8px;
+    padding: 0 6px;
+  }
+  .thumb.g2048-preview {
+    background: #121212;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .g2048-preview-board {
+    display: grid;
+    grid-template-columns: repeat(4, 28px);
+    grid-template-rows: repeat(4, 28px);
+    gap: 4px;
+    background: #2a2d33;
+    padding: 5px;
+    border-radius: 5px;
+  }
+  .g2048-preview-board div {
+    width: 28px;
+    height: 28px;
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.6rem;
+    font-weight: 700;
+  }
   .card-body {
     padding: 18px 18px 20px;
     display: flex;
@@ -401,6 +476,39 @@
     <section class="projects">
       <h2>Projects</h2>
       <div class="projects-grid">
+
+        <div class="card">
+          <div class="thumb-wrap" id="g2048-thumb-wrap">
+            <div class="thumb g2048-preview">
+              <div class="g2048-preview-board">
+                <div style="background:#eee4da;color:#5b6472;">2</div>
+                <div style="background:#ede0c8;color:#5b6472;">4</div>
+                <div style="background:#3a3f4a;"></div>
+                <div style="background:#3a3f4a;"></div>
+                <div style="background:#3a3f4a;"></div>
+                <div style="background:#f2b179;color:#f9f6f2;">8</div>
+                <div style="background:#f59563;color:#f9f6f2;">16</div>
+                <div style="background:#3a3f4a;"></div>
+                <div style="background:#3a3f4a;"></div>
+                <div style="background:#edcf72;color:#f9f6f2;">128</div>
+                <div style="background:#f67c5f;color:#f9f6f2;">32</div>
+                <div style="background:#3a3f4a;"></div>
+                <div style="background:#edc22e;color:#f9f6f2;">2048</div>
+                <div style="background:#3a3f4a;"></div>
+                <div style="background:#3a3f4a;"></div>
+                <div style="background:#3a3f4a;"></div>
+              </div>
+            </div>
+            <button class="play-btn" id="g2048-play-btn" type="button">▶ Play</button>
+          </div>
+          <div class="card-body">
+            <h3>2048</h3>
+            <p>The sliding-tile merge puzzle, built from scratch — including
+              the classic "no double merge in one move" rule that trips up
+              a lot of clones. Score and best score persist between visits.</p>
+            <div class="tags"><span class="tag">JavaScript</span><span class="tag">Playable</span></div>
+          </div>
+        </div>
 
         <div class="card">
           <div class="thumb-wrap" id="wordle-thumb-wrap">
@@ -547,6 +655,7 @@ It took you 3 guesses.</div>
   <script src="assets/snake.js"></script>
   <script src="assets/tetris.js"></script>
   <script src="assets/wordle.js"></script>
+  <script src="assets/2048.js"></script>
   <script>
     function addMuteButton(wrap) {
       const btn = document.createElement("button");
@@ -632,6 +741,14 @@ It took you 3 guesses.</div>
       const wrap = document.getElementById("wordle-thumb-wrap");
       wrap.innerHTML = '<div id="wordle-container"></div>';
       startWordleGame(document.getElementById("wordle-container"));
+      addMuteButton(wrap);
+      addFullscreenButton(wrap);
+    });
+
+    document.getElementById("g2048-play-btn").addEventListener("click", function () {
+      const wrap = document.getElementById("g2048-thumb-wrap");
+      wrap.innerHTML = '<div id="g2048-container"></div>';
+      start2048Game(document.getElementById("g2048-container"));
       addMuteButton(wrap);
       addFullscreenButton(wrap);
     });
