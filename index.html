@@ -389,6 +389,20 @@ It took you 3 guesses.</div>
           </div>
         </div>
 
+        <div class="card">
+          <div class="thumb-wrap" id="tetris-thumb-wrap">
+            <img class="thumb" src="assets/tetris.png" alt="Tetris clone gameplay screenshot">
+            <button class="play-btn" id="tetris-play-btn" type="button">▶ Play</button>
+          </div>
+          <div class="card-body">
+            <h3>Tetris</h3>
+            <p>A full implementation with a 7-bag piece randomizer, wall-kick
+              rotation, soft/hard drop, and level-based speed scaling as you
+              clear lines.</p>
+            <div class="tags"><span class="tag">JavaScript</span><span class="tag">Playable</span></div>
+          </div>
+        </div>
+
       </div>
     </section>
 
@@ -404,6 +418,7 @@ It took you 3 guesses.</div>
   <script src="assets/flappy.js"></script>
   <script src="assets/breakout.js"></script>
   <script src="assets/snake.js"></script>
+  <script src="assets/tetris.js"></script>
   <script>
     function addMuteButton(wrap) {
       const btn = document.createElement("button");
@@ -504,6 +519,11 @@ It took you 3 guesses.</div>
       "snake-play-btn", "snake-thumb-wrap",
       "Click the game, then use Arrow Keys / WASD — R to restart",
       startSnakeGame
+    );
+    wireCanvasGame(
+      "tetris-play-btn", "tetris-thumb-wrap",
+      "← → move, ↑ rotate, ↓ soft drop, Space hard drop — R to restart",
+      startTetrisGame
     );
   </script>
 
