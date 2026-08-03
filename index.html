@@ -1,0 +1,505 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Covie — Portfolio</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>%F0%9F%8E%AE</text></svg>">
+<style>
+  :root {
+    --bg: #0f1117;
+    --bg-alt: #171a23;
+    --card: #1c202b;
+    --text: #eef0f4;
+    --text-dim: #9aa1b2;
+    --accent: #ffd447;
+    --accent-2: #6fb7ff;
+    --border: #2a2f3d;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    line-height: 1.5;
+  }
+  .wrap { max-width: 900px; margin: 0 auto; padding: 0 24px; }
+
+  header.hero {
+    padding: 90px 0 60px;
+    text-align: center;
+  }
+  .hero h1 {
+    font-size: 3rem;
+    margin: 0 0 10px;
+    letter-spacing: -0.02em;
+  }
+  .hero h1 span { color: var(--accent); }
+  .hero p.tagline {
+    color: var(--text-dim);
+    font-size: 1.2rem;
+    margin: 0;
+  }
+
+  section { padding: 50px 0; }
+  section h2 {
+    font-size: 1.6rem;
+    margin-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 14px;
+  }
+  section.about p {
+    color: var(--text-dim);
+    max-width: 620px;
+    font-size: 1.05rem;
+  }
+
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 24px;
+    margin-top: 28px;
+  }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.15s ease, border-color 0.15s ease;
+  }
+  .card:hover {
+    transform: translateY(-4px);
+    border-color: var(--accent-2);
+  }
+  .card .thumb {
+    aspect-ratio: 4 / 3;
+    background: #000;
+    display: block;
+    width: 100%;
+    object-fit: cover;
+    border-bottom: 1px solid var(--border);
+  }
+  .card .thumb.terminal {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #05070a;
+    color: #6fdc8c;
+    font-family: "Courier New", monospace;
+    font-size: 0.85rem;
+    padding: 16px;
+    white-space: pre-wrap;
+  }
+  .thumb-wrap {
+    position: relative;
+    background: #000;
+    border-bottom: 1px solid var(--border);
+  }
+  .thumb-wrap .thumb {
+    border-bottom: none;
+  }
+  .play-btn {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.6);
+    color: #fff;
+    border: 1px solid var(--accent-2);
+    padding: 10px 22px;
+    border-radius: 999px;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease;
+  }
+  .play-btn:hover {
+    background: rgba(0, 0, 0, 0.8);
+    border-color: var(--accent);
+  }
+  .game-canvas {
+    display: block;
+    width: 100%;
+    height: auto;
+    background: #000;
+  }
+  .game-hint {
+    font-size: 0.7rem;
+    color: var(--text-dim);
+    text-align: center;
+    padding: 5px 0;
+    background: var(--bg-alt);
+    border-bottom: 1px solid var(--border);
+  }
+  .fullscreen-btn {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    z-index: 2;
+    background: rgba(0, 0, 0, 0.6);
+    color: #fff;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 4px 9px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    line-height: 1;
+  }
+  .fullscreen-btn:hover {
+    background: rgba(0, 0, 0, 0.85);
+    border-color: var(--accent-2);
+  }
+  .mute-btn {
+    position: absolute;
+    top: 6px;
+    right: 42px;
+    z-index: 2;
+    background: rgba(0, 0, 0, 0.6);
+    color: #fff;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 4px 9px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    line-height: 1;
+  }
+  .mute-btn:hover {
+    background: rgba(0, 0, 0, 0.85);
+    border-color: var(--accent-2);
+  }
+  .thumb-wrap:fullscreen {
+    background: #000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+  }
+  .thumb-wrap:-webkit-full-screen {
+    background: #000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+  }
+  .thumb-wrap:fullscreen .game-hint,
+  .thumb-wrap:-webkit-full-screen .game-hint {
+    background: transparent;
+    color: var(--text-dim);
+    font-size: 0.85rem;
+    padding-top: 10px;
+  }
+  .thumb-wrap:fullscreen .guess-wrap,
+  .thumb-wrap:-webkit-full-screen .guess-wrap {
+    width: min(90vw, 640px);
+    font-size: 1.15rem;
+  }
+  .thumb-wrap:fullscreen .guess-log,
+  .thumb-wrap:-webkit-full-screen .guess-log {
+    height: 45vh;
+  }
+  .guess-log {
+    background: #05070a;
+    color: #6fdc8c;
+    font-family: "Courier New", monospace;
+    font-size: 0.8rem;
+    padding: 12px;
+    height: 160px;
+    overflow-y: auto;
+    white-space: pre-wrap;
+  }
+  .guess-form {
+    display: flex;
+    gap: 6px;
+    padding: 8px;
+    background: #05070a;
+    border-top: 1px solid var(--border);
+  }
+  .guess-form input {
+    flex: 1;
+    min-width: 0;
+    background: var(--bg-alt);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 6px 8px;
+    border-radius: 6px;
+    font-family: "Courier New", monospace;
+  }
+  .guess-form button {
+    background: var(--accent-2);
+    color: #05070a;
+    border: none;
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .card-body {
+    padding: 18px 18px 20px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+  .card-body h3 {
+    margin: 0 0 6px;
+    font-size: 1.15rem;
+  }
+  .card-body p {
+    color: var(--text-dim);
+    font-size: 0.92rem;
+    margin: 0 0 14px;
+    flex: 1;
+  }
+  .tags {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 4px;
+  }
+  .tag {
+    font-size: 0.72rem;
+    background: var(--bg-alt);
+    color: var(--accent-2);
+    border: 1px solid var(--border);
+    padding: 3px 9px;
+    border-radius: 999px;
+  }
+
+  footer {
+    padding: 40px 0 70px;
+    text-align: center;
+    color: var(--text-dim);
+    font-size: 0.85rem;
+  }
+
+  @media (max-width: 600px) {
+    .hero { padding: 60px 0 40px; }
+    .hero h1 { font-size: 2.2rem; }
+  }
+</style>
+</head>
+<body>
+
+  <header class="hero">
+    <div class="wrap">
+      <h1>Hi, I'm <span>Covie</span></h1>
+      <p class="tagline">Learning to code, one project at a time.</p>
+    </div>
+  </header>
+
+  <div class="wrap">
+
+    <section class="about">
+      <h2>About</h2>
+      <p>
+        I'm new to programming and building things as I go — starting with small
+        Python scripts and working up to full games with graphics, physics, and
+        game logic. Every project on this page was built using AI
+      </p>
+    </section>
+
+    <section class="projects">
+      <h2>Projects</h2>
+      <div class="projects-grid">
+
+        <div class="card">
+          <div class="thumb-wrap" id="guess-thumb-wrap">
+            <div class="thumb terminal">Welcome to Guess the Number!
+I'm thinking of a number between 1 and 100.
+Your guess: 50
+Too low!
+Your guess: 75
+Too high!
+Your guess: 63
+You got it! The number was 63.
+It took you 3 guesses.</div>
+            <button class="play-btn" id="guess-play-btn" type="button">▶ Play</button>
+          </div>
+          <div class="card-body">
+            <h3>Guess the Number</h3>
+            <p>My very first program. A command-line game where you guess a
+              random number between 1 and 100, with hints along the way.</p>
+            <div class="tags"><span class="tag">Python</span><span class="tag">Playable</span></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="thumb-wrap" id="pacman-thumb-wrap">
+            <img class="thumb" src="assets/pacman.png" alt="Pac-Man clone gameplay screenshot">
+            <button class="play-btn" id="pacman-play-btn" type="button">▶ Play</button>
+          </div>
+          <div class="card-body">
+            <h3>Pac-Man Clone</h3>
+            <p>A maze-chase game with a randomly generated maze every run, dots
+              and power pellets, and two ghosts with different AI — one chases
+              you, one wanders.</p>
+            <div class="tags"><span class="tag">Python</span><span class="tag">Pygame</span><span class="tag">Playable</span></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="thumb-wrap" id="flappy-thumb-wrap">
+            <img class="thumb" src="assets/flappy.png" alt="Flappy Bird clone gameplay screenshot">
+            <button class="play-btn" id="flappy-play-btn" type="button">▶ Play</button>
+          </div>
+          <div class="card-body">
+            <h3>Flappy Bird Clone</h3>
+            <p>A side-scroller with gravity-based physics, procedurally spawned
+              pipes, and a persistent best-score tracker.</p>
+            <div class="tags"><span class="tag">Python</span><span class="tag">Pygame</span><span class="tag">Playable</span></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="thumb-wrap" id="breakout-thumb-wrap">
+            <img class="thumb" src="assets/breakout.png" alt="Breakout clone gameplay screenshot">
+            <button class="play-btn" id="breakout-play-btn" type="button">▶ Play</button>
+          </div>
+          <div class="card-body">
+            <h3>Breakout Clone</h3>
+            <p>A brick-breaker with angle-based paddle bounces and directional
+              collision physics — the ball reflects differently depending on
+              which side of a brick it hits.</p>
+            <div class="tags"><span class="tag">Python</span><span class="tag">Pygame</span><span class="tag">Playable</span></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="thumb-wrap" id="snake-thumb-wrap">
+            <img class="thumb" src="assets/snake.png" alt="Snake clone gameplay screenshot">
+            <button class="play-btn" id="snake-play-btn" type="button">▶ Play</button>
+          </div>
+          <div class="card-body">
+            <h3>Snake</h3>
+            <p>A Google Snake-styled remake with smooth gliding movement between
+              grid cells, a rounded tube-bodied snake, and a persistent
+              high score saved between sessions.</p>
+            <div class="tags"><span class="tag">Python</span><span class="tag">Pygame</span><span class="tag">Playable</span></div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </div>
+
+  <footer>
+    Built by Covie.
+  </footer>
+
+  <script src="assets/sfx.js"></script>
+  <script src="assets/guess.js"></script>
+  <script src="assets/pacman.js"></script>
+  <script src="assets/flappy.js"></script>
+  <script src="assets/breakout.js"></script>
+  <script src="assets/snake.js"></script>
+  <script>
+    function addMuteButton(wrap) {
+      const btn = document.createElement("button");
+      btn.className = "mute-btn";
+      btn.type = "button";
+      btn.title = "Mute sound";
+      btn.textContent = window.SFX && SFX.muted ? "🔇" : "🔊";
+      btn.addEventListener("click", function () {
+        const muted = SFX.toggleMute();
+        btn.textContent = muted ? "🔇" : "🔊";
+      });
+      wrap.appendChild(btn);
+    }
+
+    function addFullscreenButton(wrap) {
+      const btn = document.createElement("button");
+      btn.className = "fullscreen-btn";
+      btn.type = "button";
+      btn.textContent = "⛶";
+      btn.title = "Fullscreen";
+      wrap.appendChild(btn);
+
+      function isFs() {
+        return document.fullscreenElement === wrap || document.webkitFullscreenElement === wrap;
+      }
+
+      function resizeCanvas() {
+        const canvas = wrap.querySelector("canvas");
+        if (!canvas) return;
+        if (isFs()) {
+          const availW = window.innerWidth;
+          const availH = window.innerHeight - 40;
+          const scale = Math.min(availW / canvas.width, availH / canvas.height);
+          canvas.style.width = Math.floor(canvas.width * scale) + "px";
+          canvas.style.height = Math.floor(canvas.height * scale) + "px";
+        } else {
+          canvas.style.width = "";
+          canvas.style.height = "";
+        }
+      }
+
+      btn.addEventListener("click", function () {
+        if (isFs()) {
+          (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+        } else {
+          const request = wrap.requestFullscreen || wrap.webkitRequestFullscreen;
+          request.call(wrap).catch(function () {});
+        }
+      });
+
+      function onFsChange() {
+        resizeCanvas();
+        const canvas = wrap.querySelector("canvas");
+        if (canvas && isFs()) canvas.focus();
+      }
+      document.addEventListener("fullscreenchange", onFsChange);
+      document.addEventListener("webkitfullscreenchange", onFsChange);
+      window.addEventListener("resize", resizeCanvas);
+    }
+
+    function wireCanvasGame(playBtnId, wrapId, hintText, startFn) {
+      document.getElementById(playBtnId).addEventListener("click", function () {
+        const wrap = document.getElementById(wrapId);
+        wrap.innerHTML =
+          '<canvas class="game-canvas" id="' + wrapId + '-canvas"></canvas>' +
+          '<div class="game-hint">' + hintText + "</div>";
+        const canvas = document.getElementById(wrapId + "-canvas");
+        startFn(canvas);
+        addMuteButton(wrap);
+        addFullscreenButton(wrap);
+      });
+    }
+
+    document.getElementById("guess-play-btn").addEventListener("click", function () {
+      const wrap = document.getElementById("guess-thumb-wrap");
+      wrap.innerHTML = '<div class="guess-wrap" id="guess-wrap"></div>';
+      startGuessGame(document.getElementById("guess-wrap"));
+      addMuteButton(wrap);
+      addFullscreenButton(wrap);
+    });
+
+    wireCanvasGame(
+      "pacman-play-btn", "pacman-thumb-wrap",
+      "Click the game, then use Arrow Keys / WASD — R to restart",
+      startPacmanGame
+    );
+    wireCanvasGame(
+      "flappy-play-btn", "flappy-thumb-wrap",
+      "Click or press Space to flap — R to restart",
+      startFlappyGame
+    );
+    wireCanvasGame(
+      "breakout-play-btn", "breakout-thumb-wrap",
+      "Click the game, then use Arrow Keys / A D — Space to launch, R to restart",
+      startBreakoutGame
+    );
+    wireCanvasGame(
+      "snake-play-btn", "snake-thumb-wrap",
+      "Click the game, then use Arrow Keys / WASD — R to restart",
+      startSnakeGame
+    );
+  </script>
+
+</body>
+</html>
