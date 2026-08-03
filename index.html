@@ -241,6 +241,95 @@
     cursor: pointer;
     white-space: nowrap;
   }
+  .wordle-wrap {
+    background: #121212;
+    color: #fff;
+    padding: 12px 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    outline: none;
+  }
+  .wordle-stats {
+    font-size: 0.7rem;
+    color: #9aa1b2;
+    margin-bottom: 6px;
+  }
+  .wordle-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 8px;
+  }
+  .wordle-row {
+    display: flex;
+    gap: 4px;
+  }
+  .wordle-row.shake {
+    animation: wordle-shake 0.4s;
+  }
+  @keyframes wordle-shake {
+    10%, 90% { transform: translateX(-2px); }
+    20%, 80% { transform: translateX(3px); }
+    30%, 50%, 70% { transform: translateX(-5px); }
+    40%, 60% { transform: translateX(5px); }
+  }
+  .wordle-tile {
+    width: 34px;
+    height: 34px;
+    border: 2px solid #3a3a3c;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.05rem;
+    text-transform: uppercase;
+    color: #fff;
+    border-radius: 3px;
+  }
+  .wordle-tile.filled { border-color: #565758; }
+  .wordle-tile.correct { background: #538d4e; border-color: #538d4e; }
+  .wordle-tile.present { background: #b59f3b; border-color: #b59f3b; }
+  .wordle-tile.absent { background: #3a3a3c; border-color: #3a3a3c; }
+  .wordle-message {
+    min-height: 16px;
+    font-size: 0.72rem;
+    text-align: center;
+    margin-bottom: 8px;
+    padding: 0 6px;
+  }
+  .wordle-keyboard {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    width: 100%;
+    align-items: center;
+  }
+  .wordle-kb-row {
+    display: flex;
+    gap: 4px;
+  }
+  .wordle-key {
+    background: #818384;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 8px 5px;
+    min-width: 18px;
+    cursor: pointer;
+  }
+  .wordle-key.wide { min-width: 32px; font-size: 0.55rem; padding: 8px 3px; }
+  .wordle-key.correct { background: #538d4e; }
+  .wordle-key.present { background: #b59f3b; }
+  .wordle-key.absent { background: #3a3a3c; color: #888; }
+  .thumb.wordle-preview {
+    background: #121212;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
   .card-body {
     padding: 18px 18px 20px;
     display: flex;
@@ -403,6 +492,44 @@ It took you 3 guesses.</div>
           </div>
         </div>
 
+        <div class="card">
+          <div class="thumb-wrap" id="wordle-thumb-wrap">
+            <div class="thumb wordle-preview">
+              <div class="wordle-grid">
+                <div class="wordle-row">
+                  <div class="wordle-tile absent">A</div>
+                  <div class="wordle-tile present">P</div>
+                  <div class="wordle-tile absent">P</div>
+                  <div class="wordle-tile absent">L</div>
+                  <div class="wordle-tile absent">E</div>
+                </div>
+                <div class="wordle-row">
+                  <div class="wordle-tile correct">M</div>
+                  <div class="wordle-tile absent">A</div>
+                  <div class="wordle-tile present">N</div>
+                  <div class="wordle-tile absent">G</div>
+                  <div class="wordle-tile absent">O</div>
+                </div>
+                <div class="wordle-row">
+                  <div class="wordle-tile correct">M</div>
+                  <div class="wordle-tile correct">A</div>
+                  <div class="wordle-tile correct">N</div>
+                  <div class="wordle-tile correct">G</div>
+                  <div class="wordle-tile correct">O</div>
+                </div>
+              </div>
+            </div>
+            <button class="play-btn" id="wordle-play-btn" type="button">▶ Play</button>
+          </div>
+          <div class="card-body">
+            <h3>Word Guess</h3>
+            <p>A Wordle-style word game with six guesses, color-coded
+              letter feedback that correctly handles repeated letters,
+              and an on-screen keyboard that tracks what you've tried.</p>
+            <div class="tags"><span class="tag">JavaScript</span><span class="tag">Playable</span></div>
+          </div>
+        </div>
+
       </div>
     </section>
 
@@ -419,6 +546,7 @@ It took you 3 guesses.</div>
   <script src="assets/breakout.js"></script>
   <script src="assets/snake.js"></script>
   <script src="assets/tetris.js"></script>
+  <script src="assets/wordle.js"></script>
   <script>
     function addMuteButton(wrap) {
       const btn = document.createElement("button");
@@ -496,6 +624,14 @@ It took you 3 guesses.</div>
       const wrap = document.getElementById("guess-thumb-wrap");
       wrap.innerHTML = '<div class="guess-wrap" id="guess-wrap"></div>';
       startGuessGame(document.getElementById("guess-wrap"));
+      addMuteButton(wrap);
+      addFullscreenButton(wrap);
+    });
+
+    document.getElementById("wordle-play-btn").addEventListener("click", function () {
+      const wrap = document.getElementById("wordle-thumb-wrap");
+      wrap.innerHTML = '<div id="wordle-container"></div>';
+      startWordleGame(document.getElementById("wordle-container"));
       addMuteButton(wrap);
       addFullscreenButton(wrap);
     });
