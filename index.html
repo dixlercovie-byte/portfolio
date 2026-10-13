@@ -548,6 +548,36 @@
   .hm-preview svg { width:64px; height:64px; }
   .hm-preview svg path, .hm-preview svg circle, .hm-preview svg line { stroke:#9aa1b2; stroke-width:3; fill:none; stroke-linecap:round; }
   .hm-preview .w { font-family:monospace; letter-spacing:4px; color:#fff; font-weight:700; font-size:0.95rem; }
+
+  .ms-wrap, .c4-wrap { background:#121212; color:#fff; padding:40px 10px 12px; display:flex; flex-direction:column; align-items:center; }
+  .ms-hud, .c4-hud { display:flex; gap:16px; font-size:0.7rem; color:#9aa1b2; margin-bottom:8px; }
+  .ms-hud b, .c4-hud b { color: var(--accent-2); }
+  .ms-board { display:grid; grid-template-columns:repeat(9,26px); gap:2px; }
+  .ms-cell { width:26px; height:26px; border:none; border-radius:3px; background:#3a3f4a; color:#fff; font-size:0.72rem; font-weight:700; padding:0; cursor:pointer; line-height:1; }
+  .ms-cell:hover:not(.open) { background:#4a5160; }
+  .ms-cell.open { background:#1d2027; cursor:default; }
+  .ms-cell.boom { background:#7d2e2e; }
+  .ms-cell.n1 { color:#6aa9ff; } .ms-cell.n2 { color:#6fdc8c; } .ms-cell.n3 { color:#ff6b6b; } .ms-cell.n4 { color:#b48cff; }
+  .ms-cell.n5 { color:#ffb347; } .ms-cell.n6 { color:#4dd0e1; } .ms-cell.n7 { color:#fff; } .ms-cell.n8 { color:#9aa1b2; }
+  .ms-message, .c4-message { min-height:16px; font-size:0.72rem; font-weight:700; color:#6fdc8c; margin-top:8px; text-align:center; }
+  .ms-message.lose, .c4-message.lose { color:#ff6b6b; }
+  .ms-row { display:flex; gap:8px; margin-top:6px; }
+  .ms-btn, .c4-btn { padding:5px 12px; border:none; border-radius:999px; background:var(--accent-2); color:#05070a; font-size:0.7rem; font-weight:700; cursor:pointer; }
+  .ms-btn.on { background:#ffb347; }
+  .ms-btn:hover, .c4-btn:hover { background: var(--accent); }
+  .c4-board { display:grid; grid-template-columns:repeat(7,34px); gap:4px; padding:6px; background:#1f4fd8; border-radius:8px; }
+  .c4-cell { width:34px; height:34px; border-radius:50%; background:#121212; cursor:pointer; transition:background 0.15s; }
+  .c4-cell.p1 { background:#ff5c5c; } .c4-cell.p2 { background:#ffd84d; }
+  .c4-cell.hl { box-shadow:0 0 0 3px #fff; }
+  .c4-btn { margin-top:6px; }
+  .thumb.ms-preview, .thumb.c4-preview, .thumb.inv-preview { background:#121212; display:flex; align-items:center; justify-content:center; }
+  .ms-preview-board { display:grid; grid-template-columns:repeat(4,26px); gap:3px; }
+  .ms-preview-board div { width:26px; height:26px; border-radius:3px; background:#3a3f4a; display:flex; align-items:center; justify-content:center; font-size:0.75rem; font-weight:700; }
+  .ms-preview-board div.o { background:#1d2027; color:#6aa9ff; }
+  .c4-preview-board { display:grid; grid-template-columns:repeat(7,18px); gap:3px; padding:5px; background:#1f4fd8; border-radius:6px; }
+  .c4-preview-board div { width:18px; height:18px; border-radius:50%; background:#121212; }
+  .c4-preview-board .r { background:#ff5c5c; } .c4-preview-board .y { background:#ffd84d; }
+  .inv-preview-art { font-size:1.4rem; text-align:center; line-height:1.4; letter-spacing:6px; }
   .thumb.game-placeholder { display:flex; align-items:center; justify-content:center; font-size:3rem; }
 
 </style>
@@ -640,6 +670,53 @@
           <div class="card-body">
             <h3>Hangman</h3>
             <p>Guess the hidden word one letter at a time before the drawing is complete. Play with your keyboard or the on-screen letters.</p>
+            <div class="tags"><span class="tag">JavaScript</span><span class="tag">Playable</span></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="thumb-wrap" id="minesweeper-thumb-wrap">
+            <div class="thumb ms-preview"><div class="ms-preview-board">
+              <div class="o"></div><div class="o">1</div><div>🚩</div><div></div>
+              <div class="o">1</div><div class="o">2</div><div></div><div></div>
+              <div></div><div>🚩</div><div></div><div class="o">1</div>
+            </div></div>
+            <button class="play-btn" id="minesweeper-play-btn" type="button">▶ Play</button>
+          </div>
+          <div class="card-body">
+            <h3>Minesweeper</h3>
+            <p>Classic 9×9 minefield with 10 mines, a safe first click, flood-fill reveals, flags, a timer and a saved best time. Right-click or use flag mode to mark mines.</p>
+            <div class="tags"><span class="tag">JavaScript</span><span class="tag">Playable</span></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="thumb-wrap" id="connect4-thumb-wrap">
+            <div class="thumb c4-preview"><div class="c4-preview-board">
+              <div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+              <div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+              <div></div><div></div><div></div><div class="y"></div><div></div><div></div><div></div>
+              <div></div><div></div><div class="r"></div><div class="y"></div><div></div><div></div><div></div>
+              <div></div><div class="y"></div><div class="r"></div><div class="r"></div><div></div><div></div><div></div>
+              <div></div><div class="r"></div><div class="y"></div><div class="r"></div><div class="y"></div><div></div><div></div>
+            </div></div>
+            <button class="play-btn" id="connect4-play-btn" type="button">▶ Play</button>
+          </div>
+          <div class="card-body">
+            <h3>Connect Four</h3>
+            <p>Drop discs into a 7×6 grid and line up four before the computer does. The CPU looks several moves ahead, so it plays a real game.</p>
+            <div class="tags"><span class="tag">JavaScript</span><span class="tag">Playable</span></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="thumb-wrap" id="invaders-thumb-wrap">
+            <div class="thumb inv-preview"><div class="inv-preview-art">👾👾👾<br>👾👾👾<br>🚀</div></div>
+            <button class="play-btn" id="invaders-play-btn" type="button">▶ Play</button>
+          </div>
+          <div class="card-body">
+            <h3>Space Invaders</h3>
+            <p>Move, shoot and clear waves of descending aliens that speed up as you thin them out. Three lives, rising levels and a saved high score.</p>
             <div class="tags"><span class="tag">JavaScript</span><span class="tag">Playable</span></div>
           </div>
         </div>
@@ -3590,6 +3667,402 @@ function startHangmanGame(container) {
 window.startHangmanGame = startHangmanGame;
 </script>
 <script>
+function startMinesweeperGame(container) {
+  const ROWS = 9, COLS = 9, MINES = 10, KEY = "minesweeperBest";
+  container.innerHTML =
+    '<div class="ms-wrap" id="ms-wrap">' +
+      '<div class="ms-hud"><span>💣 <b id="ms-left">10</b></span><span>⏱ <b id="ms-time">0</b></span><span>Best: <b id="ms-best">–</b></span></div>' +
+      '<div class="ms-board" id="ms-board"></div>' +
+      '<div class="ms-message" id="ms-message"></div>' +
+      '<div class="ms-row"><button class="ms-btn" id="ms-flag" type="button">🚩 Flag mode: off</button><button class="ms-btn" id="ms-restart" type="button">Restart</button></div>' +
+    '</div>';
+  const boardEl = document.getElementById("ms-board");
+  const leftEl = document.getElementById("ms-left");
+  const timeEl = document.getElementById("ms-time");
+  const bestEl = document.getElementById("ms-best");
+  const msgEl = document.getElementById("ms-message");
+  const flagBtn = document.getElementById("ms-flag");
+  let cells, started, over, paused, flagMode = false, secs, timer, flags, revealed;
+  function loadBest() { try { const b = localStorage.getItem(KEY); bestEl.textContent = b ? b + "s" : "–"; } catch (e) {} }
+  function saveBest(t) { try { const b = parseInt(localStorage.getItem(KEY), 10); if (!b || t < b) localStorage.setItem(KEY, String(t)); } catch (e) {} loadBest(); }
+  function idx(r, c) { return r * COLS + c; }
+  function neighbors(r, c) {
+    const out = [];
+    for (let dr = -1; dr <= 1; dr++) for (let dc = -1; dc <= 1; dc++) {
+      if (!dr && !dc) continue;
+      const nr = r + dr, nc = c + dc;
+      if (nr >= 0 && nr < ROWS && nc >= 0 && nc < COLS) out.push([nr, nc]);
+    }
+    return out;
+  }
+  function stopTimer() { if (timer) { clearInterval(timer); timer = null; } }
+  function startTimer() {
+    stopTimer();
+    timer = setInterval(function () { if (!paused && !over) { secs++; timeEl.textContent = secs; } }, 1000);
+  }
+  function reset() {
+    stopTimer();
+    started = false; over = false; secs = 0; flags = 0; revealed = 0;
+    cells = [];
+    boardEl.innerHTML = "";
+    for (let r = 0; r < ROWS; r++) for (let c = 0; c < COLS; c++) {
+      const el = document.createElement("button");
+      el.type = "button"; el.className = "ms-cell";
+      el.addEventListener("click", function () { onClick(r, c); });
+      el.addEventListener("contextmenu", function (e) { e.preventDefault(); toggleFlag(r, c); });
+      boardEl.appendChild(el);
+      cells.push({ el: el, mine: false, n: 0, open: false, flag: false });
+    }
+    leftEl.textContent = MINES; timeEl.textContent = "0"; msgEl.textContent = ""; msgEl.className = "ms-message";
+  }
+  function place(sr, sc) {
+    let placed = 0;
+    while (placed < MINES) {
+      const r = Math.floor(Math.random() * ROWS), c = Math.floor(Math.random() * COLS);
+      if (Math.abs(r - sr) <= 1 && Math.abs(c - sc) <= 1) continue;
+      const cell = cells[idx(r, c)];
+      if (cell.mine) continue;
+      cell.mine = true; placed++;
+    }
+    for (let r = 0; r < ROWS; r++) for (let c = 0; c < COLS; c++)
+      cells[idx(r, c)].n = neighbors(r, c).filter(function (p) { return cells[idx(p[0], p[1])].mine; }).length;
+  }
+  function toggleFlag(r, c) {
+    if (over || paused) return;
+    const cell = cells[idx(r, c)];
+    if (cell.open) return;
+    cell.flag = !cell.flag;
+    flags += cell.flag ? 1 : -1;
+    cell.el.textContent = cell.flag ? "🚩" : "";
+    leftEl.textContent = MINES - flags;
+  }
+  function openCell(r, c) {
+    const stack = [[r, c]];
+    while (stack.length) {
+      const p = stack.pop(), cell = cells[idx(p[0], p[1])];
+      if (cell.open || cell.flag) continue;
+      cell.open = true; revealed++;
+      cell.el.className = "ms-cell open n" + cell.n;
+      cell.el.textContent = cell.n ? cell.n : "";
+      if (!cell.n) neighbors(p[0], p[1]).forEach(function (q) { stack.push(q); });
+    }
+  }
+  function onClick(r, c) {
+    if (over || paused) return;
+    if (flagMode) { toggleFlag(r, c); return; }
+    const cell = cells[idx(r, c)];
+    if (cell.flag || cell.open) return;
+    if (!started) { started = true; place(r, c); startTimer(); }
+    if (cell.mine) { lose(cell); return; }
+    openCell(r, c);
+    if (window.SFX) { try { SFX.score(); } catch (e) {} }
+    if (revealed === ROWS * COLS - MINES) win();
+  }
+  function lose(hit) {
+    over = true; stopTimer();
+    cells.forEach(function (x) { if (x.mine) { x.el.textContent = "💣"; x.el.className = "ms-cell open"; } });
+    hit.el.className = "ms-cell open boom";
+    msgEl.textContent = "💥 Boom! Try again."; msgEl.className = "ms-message lose";
+    if (window.SFX) { try { SFX.gameOver(); } catch (e) {} }
+  }
+  function win() {
+    over = true; stopTimer();
+    cells.forEach(function (x) { if (x.mine && !x.flag) { x.flag = true; x.el.textContent = "🚩"; } });
+    leftEl.textContent = 0;
+    msgEl.textContent = "🎉 Cleared in " + secs + "s!";
+    saveBest(secs);
+    if (window.SFX) { try { SFX.win(); } catch (e) {} }
+  }
+  flagBtn.addEventListener("click", function () {
+    flagMode = !flagMode;
+    flagBtn.textContent = "🚩 Flag mode: " + (flagMode ? "on" : "off");
+    flagBtn.classList.toggle("on", flagMode);
+  });
+  document.getElementById("ms-restart").addEventListener("click", reset);
+  loadBest(); reset();
+  return {
+    pause: function () { paused = true; },
+    resume: function () { paused = false; },
+    stop: function () { stopTimer(); }
+  };
+}
+window.startMinesweeperGame = startMinesweeperGame;
+</script>
+
+<script>
+function startConnectFourGame(container) {
+  const R = 6, C = 7, KEY = "connectFourWins";
+  container.innerHTML =
+    '<div class="c4-wrap" id="c4-wrap">' +
+      '<div class="c4-hud"><span>You: <b style="color:#ff5c5c">●</b></span><span>CPU: <b style="color:#ffd84d">●</b></span><span>Wins: <b id="c4-wins">0</b></span></div>' +
+      '<div class="c4-board" id="c4-board"></div>' +
+      '<div class="c4-message" id="c4-message"></div>' +
+      '<button class="c4-btn" id="c4-restart" type="button">New game</button>' +
+    '</div>';
+  const boardEl = document.getElementById("c4-board");
+  const msgEl = document.getElementById("c4-message");
+  const winsEl = document.getElementById("c4-wins");
+  let grid, over, paused, busy, wins = 0, cellEls = [], timeout = null;
+  try { wins = parseInt(localStorage.getItem(KEY), 10) || 0; } catch (e) {}
+  winsEl.textContent = wins;
+  function empty() { const g = []; for (let r = 0; r < R; r++) g.push(new Array(C).fill(0)); return g; }
+  function drop(g, c, p) { for (let r = R - 1; r >= 0; r--) if (!g[r][c]) { g[r][c] = p; return r; } return -1; }
+  function undo(g, c) { for (let r = 0; r < R; r++) if (g[r][c]) { g[r][c] = 0; return; } }
+  function winner(g) {
+    const D = [[0,1],[1,0],[1,1],[1,-1]];
+    for (let r = 0; r < R; r++) for (let c = 0; c < C; c++) {
+      const p = g[r][c]; if (!p) continue;
+      for (const d of D) {
+        const cells = [[r, c]];
+        for (let k = 1; k < 4; k++) {
+          const rr = r + d[0] * k, cc = c + d[1] * k;
+          if (rr < 0 || rr >= R || cc < 0 || cc >= C || g[rr][cc] !== p) break;
+          cells.push([rr, cc]);
+        }
+        if (cells.length === 4) return { p: p, cells: cells };
+      }
+    }
+    return null;
+  }
+  function full(g) { return g[0].every(function (x) { return x; }); }
+  function score(g) {
+    let s = 0;
+    for (let r = 0; r < R; r++) if (g[r][3] === 2) s += 3; else if (g[r][3] === 1) s -= 3;
+    const D = [[0,1],[1,0],[1,1],[1,-1]];
+    for (let r = 0; r < R; r++) for (let c = 0; c < C; c++) for (const d of D) {
+      let a = 0, b = 0, ok = true;
+      for (let k = 0; k < 4; k++) {
+        const rr = r + d[0] * k, cc = c + d[1] * k;
+        if (rr < 0 || rr >= R || cc < 0 || cc >= C) { ok = false; break; }
+        if (g[rr][cc] === 2) a++; else if (g[rr][cc] === 1) b++;
+      }
+      if (!ok) continue;
+      if (a && !b) s += a === 3 ? 5 : a === 2 ? 2 : 0;
+      if (b && !a) s -= b === 3 ? 6 : b === 2 ? 2 : 0;
+    }
+    return s;
+  }
+  const ORDER = [3, 2, 4, 1, 5, 0, 6];
+  function minimax(g, depth, alpha, beta, max) {
+    const w = winner(g);
+    if (w) return w.p === 2 ? 100000 + depth : -100000 - depth;
+    if (full(g) || depth === 0) return score(g);
+    if (max) {
+      let best = -Infinity;
+      for (const c of ORDER) { if (g[0][c]) continue; drop(g, c, 2); const v = minimax(g, depth - 1, alpha, beta, false); undo(g, c); if (v > best) best = v; if (best > alpha) alpha = best; if (alpha >= beta) break; }
+      return best;
+    }
+    let best = Infinity;
+    for (const c of ORDER) { if (g[0][c]) continue; drop(g, c, 1); const v = minimax(g, depth - 1, alpha, beta, true); undo(g, c); if (v < best) best = v; if (best < beta) beta = best; if (alpha >= beta) break; }
+    return best;
+  }
+  function aiMove() {
+    let bestC = -1, bestV = -Infinity;
+    for (const c of ORDER) {
+      if (grid[0][c]) continue;
+      drop(grid, c, 2);
+      const v = minimax(grid, 4, -Infinity, Infinity, false) + Math.random() * 0.5;
+      undo(grid, c);
+      if (v > bestV) { bestV = v; bestC = c; }
+    }
+    return bestC;
+  }
+  function render() {
+    for (let r = 0; r < R; r++) for (let c = 0; c < C; c++) {
+      const el = cellEls[r * C + c];
+      el.className = "c4-cell" + (grid[r][c] === 1 ? " p1" : grid[r][c] === 2 ? " p2" : "");
+    }
+  }
+  function finish() {
+    const w = winner(grid);
+    if (w) {
+      over = true;
+      w.cells.forEach(function (p) { cellEls[p[0] * C + p[1]].classList.add("hl"); });
+      if (w.p === 1) {
+        wins++; winsEl.textContent = wins;
+        try { localStorage.setItem(KEY, String(wins)); } catch (e) {}
+        msgEl.textContent = "🎉 You win!"; msgEl.className = "c4-message";
+        if (window.SFX) { try { SFX.win(); } catch (e) {} }
+      } else {
+        msgEl.textContent = "🤖 CPU wins."; msgEl.className = "c4-message lose";
+        if (window.SFX) { try { SFX.gameOver(); } catch (e) {} }
+      }
+      return true;
+    }
+    if (full(grid)) { over = true; msgEl.textContent = "It's a draw."; return true; }
+    return false;
+  }
+  function play(c) {
+    if (over || paused || busy || grid[0][c]) return;
+    drop(grid, c, 1); render();
+    if (window.SFX) { try { SFX.bounce(); } catch (e) {} }
+    if (finish()) return;
+    busy = true; msgEl.textContent = "CPU thinking…"; msgEl.className = "c4-message";
+    timeout = setTimeout(function () {
+      const m = aiMove();
+      if (m >= 0) drop(grid, m, 2);
+      busy = false; msgEl.textContent = "";
+      render(); finish();
+    }, 350);
+  }
+  function reset() {
+    if (timeout) { clearTimeout(timeout); timeout = null; }
+    grid = empty(); over = false; busy = false;
+    msgEl.textContent = ""; msgEl.className = "c4-message";
+    render();
+  }
+  for (let r = 0; r < R; r++) for (let c = 0; c < C; c++) {
+    const el = document.createElement("div");
+    el.className = "c4-cell";
+    el.addEventListener("click", function () { play(c); });
+    boardEl.appendChild(el); cellEls.push(el);
+  }
+  document.getElementById("c4-restart").addEventListener("click", reset);
+  reset();
+  return {
+    pause: function () { paused = true; },
+    resume: function () { paused = false; },
+    stop: function () { if (timeout) clearTimeout(timeout); }
+  };
+}
+window.startConnectFourGame = startConnectFourGame;
+</script>
+
+<script>
+(function () {
+  "use strict";
+  const W = 320, H = 420, HUD = 48;
+  const COLS = 8, ROWS = 4;
+  function startInvadersGame(canvas) {
+    canvas.width = W; canvas.height = H; canvas.tabIndex = 0;
+    const ctx = canvas.getContext("2d");
+    const BEST = "invadersBest";
+    let best = 0;
+    try { best = parseInt(localStorage.getItem(BEST), 10) || 0; } catch (e) {}
+    let keys = {}, paused = false, raf = 0, last = 0;
+    let ship, bullets, ebullets, inv, dir, score, lives, level, state, cooldown, ecool, stepT;
+    function build() {
+      inv = [];
+      for (let r = 0; r < ROWS; r++) for (let c = 0; c < COLS; c++)
+        inv.push({ x: 30 + c * 32, y: HUD + 20 + r * 26, r: r, alive: true });
+      dir = 1;
+    }
+    function init() {
+      ship = { x: W / 2, y: H - 24 };
+      bullets = []; ebullets = []; score = 0; lives = 3; level = 1; state = "play";
+      cooldown = 0; ecool = 1; stepT = 0; build();
+    }
+    function aliveCount() { return inv.filter(function (i) { return i.alive; }).length; }
+    function update(dt) {
+      if (state !== "play") return;
+      const sp = 150;
+      if (keys.ArrowLeft || keys.a || keys.A) ship.x -= sp * dt;
+      if (keys.ArrowRight || keys.d || keys.D) ship.x += sp * dt;
+      ship.x = Math.max(14, Math.min(W - 14, ship.x));
+      cooldown -= dt;
+      if ((keys[" "] || keys.ArrowUp) && cooldown <= 0 && bullets.length < 3) {
+        bullets.push({ x: ship.x, y: ship.y - 12 }); cooldown = 0.35;
+        if (window.SFX) { try { SFX.launch(); } catch (e) {} }
+      }
+      bullets.forEach(function (b) { b.y -= 320 * dt; });
+      bullets = bullets.filter(function (b) { return b.y > HUD; });
+      ebullets.forEach(function (b) { b.y += (130 + level * 12) * dt; });
+      ebullets = ebullets.filter(function (b) { return b.y < H; });
+      const n = aliveCount();
+      const speed = (18 + level * 5) * (1 + (COLS * ROWS - n) / 10);
+      let minX = Infinity, maxX = -Infinity, maxY = 0;
+      inv.forEach(function (i) { if (i.alive) { minX = Math.min(minX, i.x); maxX = Math.max(maxX, i.x); maxY = Math.max(maxY, i.y); } });
+      let dx = dir * speed * dt;
+      if ((dir > 0 && maxX + 10 + dx > W - 6) || (dir < 0 && minX - 10 + dx < 6)) {
+        dir = -dir; inv.forEach(function (i) { i.y += 12; });
+      } else inv.forEach(function (i) { i.x += dx; });
+      ecool -= dt;
+      if (ecool <= 0 && n) {
+        const cols = {};
+        inv.forEach(function (i) { if (i.alive) { const k = Math.round(i.x / 32); if (!cols[k] || cols[k].y < i.y) cols[k] = i; } });
+        const shooters = Object.keys(cols).map(function (k) { return cols[k]; });
+        const s = shooters[Math.floor(Math.random() * shooters.length)];
+        ebullets.push({ x: s.x, y: s.y + 8 });
+        ecool = Math.max(0.35, 1.1 - level * 0.1) * (0.5 + Math.random());
+      }
+      bullets.forEach(function (b) {
+        inv.forEach(function (i) {
+          if (i.alive && !b.dead && Math.abs(b.x - i.x) < 11 && Math.abs(b.y - i.y) < 9) {
+            i.alive = false; b.dead = true; score += 10 * (ROWS - i.r);
+            if (window.SFX) { try { SFX.brick(); } catch (e) {} }
+          }
+        });
+      });
+      bullets = bullets.filter(function (b) { return !b.dead; });
+      ebullets = ebullets.filter(function (b) {
+        if (Math.abs(b.x - ship.x) < 12 && Math.abs(b.y - ship.y) < 10) {
+          lives--; if (window.SFX) { try { SFX.hit(); } catch (e) {} }
+          return false;
+        }
+        return true;
+      });
+      if (lives <= 0 || maxY + 8 >= ship.y - 8) { state = "over"; if (window.SFX) { try { SFX.gameOver(); } catch (e) {} } saveBest(); }
+      else if (!aliveCount()) { level++; bullets = []; ebullets = []; build(); if (window.SFX) { try { SFX.win(); } catch (e) {} } }
+    }
+    function saveBest() { if (score > best) { best = score; try { localStorage.setItem(BEST, String(best)); } catch (e) {} } }
+    function draw() {
+      ctx.fillStyle = "#05060f"; ctx.fillRect(0, 0, W, H);
+      ctx.fillStyle = "#fff"; ctx.font = "12px monospace"; ctx.textAlign = "left";
+      ctx.fillText("Score " + score, 8, 42);
+      ctx.textAlign = "center"; ctx.fillText("Lv " + level + "  ♥ " + lives, W / 2, 42);
+      ctx.textAlign = "right"; ctx.fillText("Best " + best, W - 8, 42);
+      const colors = ["#ff6b6b", "#ffb347", "#6fdc8c", "#6aa9ff"];
+      inv.forEach(function (i) {
+        if (!i.alive) return;
+        ctx.fillStyle = colors[i.r % 4];
+        ctx.fillRect(i.x - 10, i.y - 6, 20, 10);
+        ctx.fillRect(i.x - 6, i.y - 9, 12, 4);
+        ctx.fillRect(i.x - 10, i.y + 4, 4, 4); ctx.fillRect(i.x + 6, i.y + 4, 4, 4);
+        ctx.fillStyle = "#05060f"; ctx.fillRect(i.x - 5, i.y - 4, 3, 3); ctx.fillRect(i.x + 2, i.y - 4, 3, 3);
+      });
+      ctx.fillStyle = "#6fdc8c";
+      ctx.fillRect(ship.x - 13, ship.y, 26, 8); ctx.fillRect(ship.x - 3, ship.y - 8, 6, 8);
+      ctx.fillStyle = "#fff"; bullets.forEach(function (b) { ctx.fillRect(b.x - 1, b.y - 6, 2, 10); });
+      ctx.fillStyle = "#ff6b6b"; ebullets.forEach(function (b) { ctx.fillRect(b.x - 1.5, b.y - 5, 3, 9); });
+      if (state === "over" || paused) {
+        ctx.fillStyle = "rgba(0,0,0,0.65)"; ctx.fillRect(0, 0, W, H);
+        ctx.fillStyle = "#fff"; ctx.textAlign = "center"; ctx.font = "bold 22px monospace";
+        ctx.fillText(state === "over" ? "GAME OVER" : "PAUSED", W / 2, H / 2 - 6);
+        ctx.font = "12px monospace";
+        if (state === "over") ctx.fillText("Score " + score + " — press R", W / 2, H / 2 + 16);
+      }
+    }
+    function loop(t) {
+      const dt = Math.min(0.05, (t - (last || t)) / 1000); last = t;
+      if (!paused) update(dt);
+      draw(); raf = requestAnimationFrame(loop);
+    }
+    function down(e) {
+      if ([" ", "ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].indexOf(e.key) >= 0) e.preventDefault();
+      keys[e.key] = true;
+      if (e.key === "r" || e.key === "R") init();
+    }
+    function up(e) { keys[e.key] = false; }
+    window.addEventListener("keydown", down); window.addEventListener("keyup", up);
+    canvas.addEventListener("pointerdown", function (e) {
+      canvas.focus();
+      if (state === "over") { init(); return; }
+      const rc = canvas.getBoundingClientRect();
+      ship.x = (e.clientX - rc.left) / rc.width * W;
+      keys[" "] = true; setTimeout(function () { keys[" "] = false; }, 120);
+    });
+    init(); raf = requestAnimationFrame(loop); canvas.focus();
+    return {
+      pause: function () { paused = true; },
+      resume: function () { paused = false; last = 0; },
+      stop: function () { cancelAnimationFrame(raf); window.removeEventListener("keydown", down); window.removeEventListener("keyup", up); }
+    };
+  }
+  window.startInvadersGame = startInvadersGame;
+})();
+</script>
+
+<script>
 function addMuteButton(wrap) {
       const btn = document.createElement("button");
       btn.className = "mute-btn";
@@ -3737,6 +4210,8 @@ function addMuteButton(wrap) {
     wireDomGame("g2048-play-btn", "g2048-thumb-wrap", '<div id="g2048-container"></div>', "g2048-container", start2048Game);
     wireDomGame("memory-play-btn", "memory-thumb-wrap", '<div id="memory-container"></div>', "memory-container", startMemoryGame);
     wireDomGame("hangman-play-btn", "hangman-thumb-wrap", '<div id="hangman-container"></div>', "hangman-container", startHangmanGame);
+    wireDomGame("minesweeper-play-btn", "minesweeper-thumb-wrap", '<div id="minesweeper-container"></div>', "minesweeper-container", startMinesweeperGame);
+    wireDomGame("connect4-play-btn", "connect4-thumb-wrap", '<div id="connect4-container"></div>', "connect4-container", startConnectFourGame);
 
     wireCanvasGame(
       "pacman-play-btn", "pacman-thumb-wrap",
@@ -3762,6 +4237,11 @@ function addMuteButton(wrap) {
       "tetris-play-btn", "tetris-thumb-wrap",
       "← → move, ↑ rotate, ↓ soft drop, Space hard drop — R to restart",
       startTetrisGame
+    );
+    wireCanvasGame(
+      "invaders-play-btn", "invaders-thumb-wrap",
+      "← → / A D move, Space shoot — R to restart",
+      startInvadersGame
     );
 
 </script>
