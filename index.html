@@ -525,6 +525,29 @@
   .memory-preview-board { display:grid; grid-template-columns:repeat(4,26px); grid-template-rows:repeat(2,26px); gap:4px; }
   .memory-preview-board div { width:26px; height:26px; border-radius:4px; display:flex; align-items:center; justify-content:center; font-size:0.8rem; background: var(--accent-2-dark); }
   .memory-preview-board div.face { background:#2a2d33; }
+
+  .hm-wrap { background:#121212; color:#fff; padding:12px 10px; display:flex; flex-direction:column; align-items:center; outline:none; }
+  .hm-hud { display:flex; gap:16px; font-size:0.7rem; color:#9aa1b2; margin-bottom:6px; }
+  .hm-hud b { color: var(--accent-2); }
+  .hm-svg { width:110px; height:110px; }
+  .hm-svg .gal { stroke:#9aa1b2; stroke-width:3; fill:none; stroke-linecap:round; }
+  .hm-svg .part { stroke:#ff6b6b; stroke-width:3; fill:none; stroke-linecap:round; }
+  .hm-word { font-size:1.15rem; letter-spacing:5px; font-weight:700; margin:4px 0 2px; font-family:monospace; text-align:center; min-height:26px; }
+  .hm-hint { font-size:0.65rem; color:#9aa1b2; margin-bottom:6px; }
+  .hm-keys { display:grid; grid-template-columns:repeat(9,24px); gap:3px; }
+  .hm-key { width:24px; height:24px; border:none; border-radius:4px; background:#2a2d33; color:#fff; font-size:0.65rem; font-weight:700; cursor:pointer; padding:0; }
+  .hm-key:hover:not(:disabled) { background: var(--accent-2-dark); }
+  .hm-key.ok { background:#2e7d46; }
+  .hm-key.bad { background:#7d2e2e; }
+  .hm-key:disabled { cursor:default; opacity:0.8; }
+  .hm-message { min-height:16px; font-size:0.72rem; font-weight:700; text-align:center; margin-top:8px; color:#6fdc8c; }
+  .hm-message.lose { color:#ff6b6b; }
+  .hm-restart-btn { margin-top:6px; padding:5px 14px; border:none; border-radius:999px; background:var(--accent-2); color:#05070a; font-size:0.7rem; font-weight:700; cursor:pointer; }
+  .hm-restart-btn:hover { background: var(--accent); }
+  .thumb.hm-preview { background:#121212; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px; }
+  .hm-preview svg { width:64px; height:64px; }
+  .hm-preview svg path, .hm-preview svg circle, .hm-preview svg line { stroke:#9aa1b2; stroke-width:3; fill:none; stroke-linecap:round; }
+  .hm-preview .w { font-family:monospace; letter-spacing:4px; color:#fff; font-weight:700; font-size:0.95rem; }
   .thumb.game-placeholder { display:flex; align-items:center; justify-content:center; font-size:3rem; }
 
 </style>
@@ -602,6 +625,21 @@
           <div class="card-body">
             <h3>Memory Match</h3>
             <p>A card-flipping memory game with an 8-pair emoji deck, a move counter, and a persistent best-score saved between visits.</p>
+            <div class="tags"><span class="tag">JavaScript</span><span class="tag">Playable</span></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="thumb-wrap" id="hangman-thumb-wrap">
+            <div class="thumb hm-preview">
+              <svg viewBox="0 0 100 100"><path d="M10 92H60M30 92V10H70V24"/><circle cx="70" cy="34" r="10"/><line x1="70" y1="44" x2="70" y2="68"/></svg>
+              <div class="w">H_NGM_N</div>
+            </div>
+            <button class="play-btn" id="hangman-play-btn" type="button">▶ Play</button>
+          </div>
+          <div class="card-body">
+            <h3>Hangman</h3>
+            <p>Guess the hidden word one letter at a time before the drawing is complete. Play with your keyboard or the on-screen letters.</p>
             <div class="tags"><span class="tag">JavaScript</span><span class="tag">Playable</span></div>
           </div>
         </div>
@@ -3460,6 +3498,98 @@ function startMemoryGame(container) {
 window.startMemoryGame = startMemoryGame;
 </script>
 <script>
+function startHangmanGame(container) {
+  const WORDS = ["JAVASCRIPT","BROWSER","KEYBOARD","PORTFOLIO","PUZZLE","ROCKET","GALAXY","WIZARD","PIRATE","DRAGON","CASTLE","JUNGLE","MONSTER","SUMMER","MIRROR","BALLOON","CAMERA","GUITAR","PLANET","TREASURE","VOLCANO","ISLAND","THUNDER","LANTERN","COMPUTER","PYRAMID","PENGUIN","RAINBOW"];
+  const MAX = 6;
+  const BEST_KEY = "hangmanWins";
+  const LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+  container.innerHTML =
+    '<div class="hm-wrap" id="hm-wrap" tabindex="0">' +
+      '<div class="hm-hud"><span>Lives: <b id="hm-lives">6</b></span><span>Wins: <b id="hm-wins">0</b></span></div>' +
+      '<svg class="hm-svg" viewBox="0 0 100 100">' +
+        '<path class="gal" d="M10 92H60M30 92V10H70V24"/>' +
+        '<circle class="part" cx="70" cy="34" r="10" data-i="0" style="display:none"/>' +
+        '<line class="part" x1="70" y1="44" x2="70" y2="68" data-i="1" style="display:none"/>' +
+        '<line class="part" x1="70" y1="50" x2="56" y2="60" data-i="2" style="display:none"/>' +
+        '<line class="part" x1="70" y1="50" x2="84" y2="60" data-i="3" style="display:none"/>' +
+        '<line class="part" x1="70" y1="68" x2="58" y2="84" data-i="4" style="display:none"/>' +
+        '<line class="part" x1="70" y1="68" x2="82" y2="84" data-i="5" style="display:none"/>' +
+      '</svg>' +
+      '<div class="hm-word" id="hm-word"></div>' +
+      '<div class="hm-keys" id="hm-keys"></div>' +
+      '<div class="hm-message" id="hm-message"></div>' +
+      '<button class="hm-restart-btn" id="hm-restart" type="button">New word</button>' +
+    '</div>';
+  const wrap = document.getElementById("hm-wrap");
+  const wordEl = document.getElementById("hm-word");
+  const keysEl = document.getElementById("hm-keys");
+  const msgEl = document.getElementById("hm-message");
+  const livesEl = document.getElementById("hm-lives");
+  const winsEl = document.getElementById("hm-wins");
+  const parts = wrap.querySelectorAll(".part");
+  let word = "", guessed = {}, wrong = 0, over = false, paused = false, wins = 0, last = "";
+  try { wins = parseInt(localStorage.getItem(BEST_KEY), 10) || 0; } catch (e) {}
+  winsEl.textContent = wins;
+  const keyBtns = {};
+  LETTERS.forEach(function (L) {
+    const b = document.createElement("button");
+    b.type = "button"; b.className = "hm-key"; b.textContent = L;
+    b.addEventListener("click", function () { guess(L); });
+    keysEl.appendChild(b); keyBtns[L] = b;
+  });
+  function render() {
+    wordEl.textContent = word.split("").map(function (c) { return guessed[c] || over ? c : "_"; }).join(" ");
+    livesEl.textContent = MAX - wrong;
+    parts.forEach(function (p, i) { p.style.display = i < wrong ? "" : "none"; });
+  }
+  function newWord() {
+    do { word = WORDS[Math.floor(Math.random() * WORDS.length)]; } while (word === last && WORDS.length > 1);
+    last = word; guessed = {}; wrong = 0; over = false;
+    msgEl.textContent = ""; msgEl.className = "hm-message";
+    LETTERS.forEach(function (L) { keyBtns[L].disabled = false; keyBtns[L].className = "hm-key"; });
+    render();
+  }
+  function guess(L) {
+    if (over || paused || guessed[L]) return;
+    guessed[L] = true;
+    const hit = word.indexOf(L) !== -1;
+    keyBtns[L].disabled = true;
+    keyBtns[L].className = "hm-key " + (hit ? "ok" : "bad");
+    if (window.SFX) { try { if (hit) SFX.score(); else SFX.hit(); } catch (e) {} }
+    if (!hit) wrong++;
+    if (word.split("").every(function (c) { return guessed[c]; })) {
+      over = true; wins++;
+      try { localStorage.setItem(BEST_KEY, String(wins)); } catch (e) {}
+      winsEl.textContent = wins;
+      msgEl.textContent = "🎉 You got it!";
+      if (window.SFX) { try { SFX.win(); } catch (e) {} }
+    } else if (wrong >= MAX) {
+      over = true;
+      msgEl.textContent = "💀 The word was " + word;
+      msgEl.className = "hm-message lose";
+      if (window.SFX) { try { SFX.gameOver(); } catch (e) {} }
+    }
+    if (over) LETTERS.forEach(function (x) { keyBtns[x].disabled = true; });
+    render();
+  }
+  function onKey(e) {
+    if (e.ctrlKey || e.metaKey || e.altKey) return;
+    if (/^[a-zA-Z]$/.test(e.key)) guess(e.key.toUpperCase());
+    else if ((e.key === "Enter") && over) newWord();
+  }
+  window.addEventListener("keydown", onKey);
+  document.getElementById("hm-restart").addEventListener("click", newWord);
+  newWord();
+  wrap.focus();
+  return {
+    pause: function () { paused = true; },
+    resume: function () { paused = false; },
+    stop: function () { window.removeEventListener("keydown", onKey); }
+  };
+}
+window.startHangmanGame = startHangmanGame;
+</script>
+<script>
 function addMuteButton(wrap) {
       const btn = document.createElement("button");
       btn.className = "mute-btn";
@@ -3606,6 +3736,7 @@ function addMuteButton(wrap) {
     wireDomGame("wordle-play-btn", "wordle-thumb-wrap", '<div id="wordle-container"></div>', "wordle-container", startWordleGame);
     wireDomGame("g2048-play-btn", "g2048-thumb-wrap", '<div id="g2048-container"></div>', "g2048-container", start2048Game);
     wireDomGame("memory-play-btn", "memory-thumb-wrap", '<div id="memory-container"></div>', "memory-container", startMemoryGame);
+    wireDomGame("hangman-play-btn", "hangman-thumb-wrap", '<div id="hangman-container"></div>', "hangman-container", startHangmanGame);
 
     wireCanvasGame(
       "pacman-play-btn", "pacman-thumb-wrap",
